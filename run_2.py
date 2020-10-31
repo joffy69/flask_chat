@@ -1,16 +1,11 @@
 import os
-from flask import Flask, redirect
+from flask import Flask
 
 app = Flask(__name__)
 messages=[]
 
 def add_messages(username, message):
-    """add messages to the messages list"""
     messages.append("{}: {}".format(username, message))
-
-def get_all_messages():
-    """get all messages and separate with a br"""
-    return "<br>".join(messages)
 
 @app.route('/')
 def index():
@@ -20,12 +15,11 @@ def index():
 @app.route('/<username>')
 def user(username):
     """display chat message"""
-    return "<h1>Welcome, {0}</h1>{1}".format(username, get_all_messages())
+    return "Welcome, {0}".format(username, messages)
 
 @app.route('/<username>/<message>')
 def send_message(username, message):
     """create a new message and redirect back to chat page"""
-    add_messages(username, message)
-    return redirect("/" + username)
+    return "{0}:{1}".format(username, message)
 
 app.run(host=os.getenv('IP'), port=int(os.getenv('PORT')), debug=True)
